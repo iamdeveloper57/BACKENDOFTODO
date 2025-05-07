@@ -14,10 +14,9 @@ exports.createUser = async (req, res) => {
       const newUser = new User({ username, password });
       await newUser.save();
       console.log("user created");
-      res.status(201).json(newUser);
+      res.status(201).json(newUser, { message: "user created" });
     }
-    
- } catch (error) {
+  } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -29,10 +28,10 @@ exports.loginUser = async (req, res) => {
 
     if (user && (await user.comparePassword(password))) {
       const payload = { id: user._id, username: user.username };
-      const token = JWT.sign(payload, "ramisalive", { expiresIn: "1h" });
+      const token = JWT.sign(payload, "ramisalive", { expiresIn: "7h" });
       res.status(200).json({ token });
     } else {
-      res.status(401).json({ error: "Invalid username or password" });
+      res.status(401).json({ message: "Invalid username or password" });
     }
   } catch (error) {
     console.error(error);
